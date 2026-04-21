@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from core.medical_utils import get_sha512_ints, get_sha512_params, get_sha512_params_analysis, inverse_arnold, get_logistic_map
+from Medical.core.medical_utils import get_sha512_ints, get_sha512_params, get_sha512_params_analysis, inverse_arnold, get_logistic_map
 
 def decrypt_medical(cipher_input, key_str, k2, original_ref=None):
     cipher = cipher_input.copy() if isinstance(cipher_input, np.ndarray) else cv2.imread(cipher_input, 0)

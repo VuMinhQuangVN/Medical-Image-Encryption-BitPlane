@@ -4,7 +4,7 @@ import numpy as np
 def diffusion_inverse(C, K2, K3, Q):
     m, n = C.shape
     N = m * n
-    C = C.flatten().astype(np.int32) # Dùng int32 để tính toán không bị lỗi uint8
+    C = C.flatten().astype(np.int32) 
     D_inv = np.zeros(N, dtype=np.uint8)
 
     for i in range(N - 1, 0, -1):

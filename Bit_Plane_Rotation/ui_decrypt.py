@@ -1,10 +1,13 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
 import cv2
 import numpy as np
 import time
-import os
 import math
 
 # Import các thuật toán từ thư mục core
@@ -19,7 +22,7 @@ class DecryptUI:
         self.res_md5 = None
         self.file_path = None
         self.cipher_np = None     
-        self.original_np = None   # Ảnh gốc để đối chứng
+        self.original_np = None  
         self.decrypted_np = None  
         self.generated_keys = None
         self.setup_ui()
@@ -98,47 +101,36 @@ class DecryptUI:
         self.parent.update()
 
     def load_cipher(self):
-        # 1. Mở hộp thoại chọn file ảnh bản mã
         path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.bmp *.jpg")])
         if path:
-            # 2. Đọc ảnh bằng OpenCV ở chế độ Ảnh Xám
             img_cv = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             if img_cv is None:
                 messagebox.showerror("Lỗi", "Không thể đọc được file bản mã này!")
                 return
 
-            # 3. Chuẩn hóa về 256x256 bằng thuật toán nội suy LANCZOS4
             self.cipher_np = cv2.resize(img_cv, (256, 256), interpolation=cv2.INTER_LANCZOS4)
             
-            # 4. CHUẨN BỊ HIỂN THỊ (NumPy -> PIL -> ImageTk)
-            # Tạo ảnh hiển thị lớn hơn (300x300) cho Canvas
+
             img_pil = Image.fromarray(self.cipher_np)
             self.tk_cipher = ImageTk.PhotoImage(img_pil.resize((300, 300), Image.Resampling.LANCZOS))
             self.canvas_cipher.config(image=self.tk_cipher)
             
-            # 5. Vẽ Histogram từ mảng NumPy của bản mã
             self.tk_h_cipher = get_histogram_image(self.cipher_np, "Histogram Bản Mã")
             self.canvas_hist_cipher.config(image=self.tk_h_cipher)
             
-            # 6. Cập nhật trạng thái
             self.btn_decrypt.config(state="normal")
             self.log(f"Đã nạp bản mã (CV2): {os.path.basename(path)}")
             
     def load_original(self):
-        # 1. Mở hộp thoại chọn file ảnh gốc đối chứng
         path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.bmp *.jpg")])
         if path:
-            # 2. Đọc ảnh bằng OpenCV ở chế độ Ảnh Xám
             img_cv = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
             if img_cv is None:
                 messagebox.showerror("Lỗi", "Không thể đọc được file ảnh gốc này!")
                 return
 
-            # 3. Chuẩn hóa về 256x256 bằng thuật toán nội suy LANCZOS4
-            # Giúp mảng NumPy của ảnh gốc khớp 100% với cách xử lý của bản mã
             self.original_np = cv2.resize(img_cv, (256, 256), interpolation=cv2.INTER_LANCZOS4)
             
-            # 4. Cập nhật giao diện
             self.lbl_orig_info.config(text=f"Đã khớp: {os.path.basename(path)}", fg="#27ae60")
             self.log(f"Đã nạp ảnh gốc đối chứng (CV2): {os.path.basename(path)}")
 

@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 # File: ui_encrypt.py
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -5,7 +9,6 @@ from PIL import Image, ImageTk
 import cv2
 import numpy as np
 import time
-import os
 import math
 
 # Import các thuật toán từ thư mục core
@@ -107,40 +110,28 @@ class EncryptUI:
         self.parent.update()
 
     def load_image(self):
-        # 1. Mở hộp thoại chọn file ảnh gốc
         self.file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp")])
         
         if self.file_path:
-            # 2. Đọc ảnh bằng OpenCV ở chế độ Ảnh Xám (Grayscale)
             img_cv = cv2.imread(self.file_path, cv2.IMREAD_GRAYSCALE)
             
-            # Kiểm tra an toàn xem file có lỗi không
             if img_cv is None:
                 messagebox.showerror("Lỗi", "OpenCV không thể đọc được tệp tin này!")
                 return
 
-            # 3. CHUẨN HÓA KÍCH THƯỚC (256x256)
-            # Dùng LANCZOS4 để giữ chi tiết ảnh tốt nhất cho quá trình mã hóa
             self.original_np = cv2.resize(img_cv, (256, 256), interpolation=cv2.INTER_LANCZOS4)
             
-            # Cập nhật nhãn tên file trên giao diện
             self.lbl_filename.config(text=os.path.basename(self.file_path))
 
-            # 4. CHUẨN BỊ HIỂN THỊ TRÊN CANVAS (350x350)
-            # Chuyển NumPy (OpenCV) -> PIL Image -> ImageTk để Tkinter hiểu được
             img_pil = Image.fromarray(self.original_np)
             
-            # Resize nhẹ lên 350x350 để hiển thị cho đẹp trong khung ảnh gốc
             img_preview = img_pil.resize((350, 350), Image.Resampling.LANCZOS)
             self.original_img_tk = ImageTk.PhotoImage(img_preview)
             self.canvas_orig.config(image=self.original_img_tk)
 
-            # 5. VẼ HISTOGRAM ẢNH GỐC
-            # Sử dụng mảng NumPy 256x256 đã chuẩn hóa để vẽ biểu đồ
             self.hist_orig_tk = get_histogram_image(self.original_np, "Histogram Gốc")
             self.canvas_hist_orig.config(image=self.hist_orig_tk)
 
-            # 6. CẬP NHẬT TRẠNG THÁI HỆ THỐNG
             self.btn_encrypt.config(state="normal")
             self.log(f"Đã nạp & chuẩn hóa (CV2): {os.path.basename(self.file_path)}")
             

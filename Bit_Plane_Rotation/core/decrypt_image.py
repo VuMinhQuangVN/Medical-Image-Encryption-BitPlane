@@ -2,13 +2,12 @@
 import numpy as np
 import cv2
 
-from core.encrypt_image import (
+from Bit_Plane_Rotation.core.encrypt_image import (
     bit_plane_decomposition, 
     combine_bit_planes, 
     select_plane, 
     insert_plane, 
     compute_submatrix_position,
-    # compute_rotation_angle
 )
 
 def bit_plane_rotation_inverse(img_diffused, keys):
@@ -68,7 +67,6 @@ def bit_plane_rotation_inverse(img_diffused, keys):
         # Tính vị trí sub-matrix (giống hệt lúc mã hóa)
         row, col, size = compute_submatrix_position(key0, plane_m, plane_n)
         # TÍNH GÓC QUAY NGƯỢC
-        # Nếu mã hóa quay k*90 độ, thì giải mã quay (4-k)*90 độ
         k_forward = key3 % 4
         k_inverse = (4 - k_forward) % 4
         
@@ -84,7 +82,7 @@ def bit_plane_rotation_inverse(img_diffused, keys):
 def decrypt_full(cipher_img, keys, Q):
 
     # Bước 1: Giải khuếch tán trước
-    from core.diffusion_inverse import diffusion_inverse
+    from Bit_Plane_Rotation.core.diffusion_inverse import diffusion_inverse
     D_inv = diffusion_inverse(cipher_img, keys["K2"], keys["K3"], Q)
     
     # Bước 2: Xoay ngược bit-plane sau

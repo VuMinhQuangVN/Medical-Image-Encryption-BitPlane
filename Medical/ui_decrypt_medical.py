@@ -1,16 +1,19 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 # Anh_Y_Te/ui_decrypt_medical.py
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
 import numpy as np
 import time
-import os
 import math
 import cv2
 
-# --- IMPORT CÁC THUẬT TOÁN CORE Y TẾ ---
+
 from core.medical_decrypt import decrypt_medical
-# --- IMPORT CÁC HÀM PHÂN TÍCH ---
+
 from core.analysis_utils import (
     calculate_psnr, calculate_ssim, calculate_ber, get_histogram_image 
 )
@@ -161,7 +164,6 @@ class MedicalDecryptUI:
             # --- LOGIC LINH ĐỘNG ---
             if self.original_np is not None:
                 self.log("Giải mã với tham chiếu ảnh gốc (Mode Analysis)...")
-                # Truyền original_ref để hàm băm SHA-512 khớp với lúc mã hóa
                 self.decrypted_np = decrypt_medical(self.cipher_np, pwd, k2_val, original_ref=self.original_np)
                 
                 # Tính toán chỉ số

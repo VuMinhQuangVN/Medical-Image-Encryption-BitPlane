@@ -1,5 +1,3 @@
-# Diffusion phase of the image encryption algorithm
-
 import numpy as np
 
 

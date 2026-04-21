@@ -1,6 +1,6 @@
 import numpy as np
 import hashlib
-from core.SHA_512 import sha512_tu_tinh
+from Hybrid.core.SHA_512 import sha512_tu_tinh
 
 # --- NHÓM 1: XỬ LÝ SHA-512 & THAM SỐ HỖN ĐỘN ---
 
@@ -24,8 +24,8 @@ def sha512_to_decimal(sha512_hex):
 def compute_N0_Q_hybrid(sha512_hex):
     """Kế thừa logic giáo sư: Tính số bước bỏ qua (N0) và pixel mồi (Q)"""
     H = sha512_to_decimal(sha512_hex)
-    N0 = 1000 + (H % 500)  # N0 trong khoảng 1000 - 1500
-    Q = H % 256            # Q trong khoảng 0 - 255
+    N0 = 1000 + (H % 500)  
+    Q = H % 256           
     return H, N0, Q
 
 # --- NHÓM 2: XỬ LÝ BIT-PLANE & ARNOLD (PHẦN XÁO TRỘN) ---
@@ -33,6 +33,10 @@ def compute_N0_Q_hybrid(sha512_hex):
 def bit_plane_slice(img):
     """Cắt ảnh xám thành 8 mặt phẳng bit (từ bit 0 đến bit 7)"""
     return [(img >> i) & 1 for i in range(8)]
+
+def bit_plane_slice1(img):
+    """Cắt ảnh xám thành 8 mặt phẳng bit (từ bit 0 đến bit 7)"""
+    return [((img >> i) & 1) * 255 for i in range(8)]
 
 def bit_plane_rejoin(planes):
     """Gộp 8 mặt phẳng bit lại thành ảnh xám 8-bit hoàn chỉnh"""

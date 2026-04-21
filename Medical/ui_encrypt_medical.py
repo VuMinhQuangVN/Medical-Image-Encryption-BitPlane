@@ -1,16 +1,19 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 # Anh_Y_Te/ui_encrypt_medical.py
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
 import numpy as np
 import time
-import os
 import math
 import cv2
 
-# --- IMPORT CÁC THUẬT TOÁN CORE Y TẾ ---
+
 from core.medical_encrypt import encrypt_medical
-# --- IMPORT CÁC HÀM PHÂN TÍCH ---
 from core.analysis_utils import (
     calculate_entropy, calculate_correlation, calculate_npcr_uaci,
     calculate_psnr, calculate_ssim, get_histogram_image 
@@ -23,8 +26,7 @@ class MedicalEncryptUI:
         self.original_np = None
         self.encrypted_np = None 
         
-        # Biến trạng thái cho dấu tích (Checkbox)
-        self.var_analysis = tk.BooleanVar(value=True) # Mặc định là True
+        self.var_analysis = tk.BooleanVar(value=True) 
         
         self.tk_orig = None
         self.tk_enc = None

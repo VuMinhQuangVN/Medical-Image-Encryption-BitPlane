@@ -28,8 +28,7 @@ def calculate_correlation(img):
     # 3. Phương Chéo (D)
     d_x, d_y = img[:-1, :-1].flatten(), img[1:, 1:].flatten()
     corr_d = np.corrcoef(d_x, d_y)[0, 1]
-    
-    # Xử lý NaN (nếu ảnh trắng tinh/đen tinh)
+
     res = [c if not np.isnan(c) else 0.0 for c in [corr_h, corr_v, corr_d]]
     return tuple(res)
 
@@ -52,7 +51,6 @@ def calculate_npcr_uaci(c1, c2):
     npcr = (np.sum(diff) / diff.size) * 100.0
     
     # --- 2. Tính UACI (Unified Averaged Changed Intensity) ---
-    # abs_diff = |c1 - c2|
     abs_diff = np.abs(c1 - c2)
     uaci = (np.mean(abs_diff) / 255.0) * 100.0
     
@@ -96,3 +94,42 @@ def get_histogram_image(img_np, title="Histogram", size=(4, 3)):
     
     pil_img = Image.open(buf)
     return ImageTk.PhotoImage(pil_img)
+
+def get_histogram_analysis_v11(img_np, title="Histogram", size=(3.8, 1.8)):
+    counts, _ = np.histogram(img_np.ravel(), bins=256, range=[0, 256])
+    fig, ax = plt.subplots(figsize=size, dpi=90)
+    ax.bar(range(256), counts, color='#2c3e50', alpha=0.7, width=1.0)
+    ax.tick_params(labelsize=6)
+    fig.tight_layout()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    plt.close(fig)
+    return Image.open(buf)
+
+def get_histogram_analysis_v12(img_np, title="Histogram", size=(3.8, 1.8)):
+
+    counts, _ = np.histogram(img_np.ravel(), bins=256, range=[0, 256])
+    
+    prob_counts = counts / img_np.size
+    
+    fig, ax = plt.subplots(figsize=size, dpi=90)
+    
+    ax.bar(range(256), counts, color='#2c3e50', alpha=0.7, width=1.0)
+    
+    mean_count = np.mean(counts)
+    if title != "Original Histogram":
+
+        ax.set_ylim([0, max(counts) * 1.1]) 
+    
+    ax.axhline(y=mean_count, color='red', linestyle='--', linewidth=0.8, alpha=0.6)
+    ax.set_xlim([0, 255])
+    ax.tick_params(labelsize=6)
+    
+    fig.tight_layout()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    plt.close(fig)
+    
+    return Image.open(buf)

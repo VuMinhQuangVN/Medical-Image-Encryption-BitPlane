@@ -86,7 +86,6 @@ class HybridAnalysisUI:
             cipher_c1, q_val = run_hybrid_logic(self.img_orig, pwd)
 
             # --- BƯỚC 2: TÍNH VI SAI (NPCR/UACI) ---
-            # Tạo ảnh lỗi 1 bit
             img_mod = self.img_orig.copy()
             img_mod[0, 0] = (int(img_mod[0, 0]) + 1) % 256
             # Mã hóa ảnh lỗi (C2)

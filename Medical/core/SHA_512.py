@@ -21,19 +21,19 @@ def generate_constants():
     """Tự động tính toán H_INIT và K cho SHA-512"""
     primes = get_first_n_primes(80)
     
-    # Tính H (8 số nguyên tố đầu, căn bậc 2)
+
     h_init = []
     for p in primes[:8]:
         root = Decimal(p).sqrt()
         frac = root - int(root) # Lấy phần phân số
         h_init.append(int(frac * Decimal(2**64)))
         
-    # Tính K (80 số nguyên tố đầu, căn bậc 3)
+
     k_const = []
     for p in primes:
-        # Căn bậc 3: x^(1/3)
+
         root = Decimal(p) ** (Decimal(1) / Decimal(3))
-        frac = root - int(root) # Lấy phần phân số
+        frac = root - int(root) 
         k_const.append(int(frac * Decimal(2**64)))
         
     return h_init, k_const
@@ -55,7 +55,6 @@ def sha512_tu_tinh(message_str):
         data.append(0x00)
     data += struct.pack('>QQ', 0, bit_len)
 
-    # Khởi tạo giá trị h bằng danh sách vừa tính được
     h = list(H_INIT)
 
     # 2. Xử lý khối 1024-bit
@@ -86,7 +85,6 @@ def sha512_tu_tinh(message_str):
 
     return "".join(f"{x:016x}" for x in h)
 
-# --- KIỂM TRA ---
 if __name__ == "__main__":
     msg = "Hello Worldd"
     import hashlib

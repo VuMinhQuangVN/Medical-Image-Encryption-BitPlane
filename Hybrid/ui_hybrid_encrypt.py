@@ -1,10 +1,14 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageTk
 import numpy as np
 import cv2
 import time
-import os
 import math
 
 # --- IMPORT CÁC THÀNH PHẦN HYBRID TỪ CORE ---

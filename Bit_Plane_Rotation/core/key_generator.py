@@ -1,7 +1,7 @@
 # Key Generation using Hyper-chaotic Systems
 
-from core.hyper_lorenz import generate_keys
-from core.hyper6d import generate_keys_6d
+from Bit_Plane_Rotation.core.hyper_lorenz import generate_keys
+from Bit_Plane_Rotation.core.hyper6d import generate_keys_6d
 
 
 def generate_all_keys(x0,y0,z0,w0,

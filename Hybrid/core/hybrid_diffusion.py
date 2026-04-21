@@ -13,7 +13,6 @@ def hybrid_diffusion_forward(D, K2, K3, Q):
     C = np.zeros(N, dtype=np.uint8)
 
     # --- Xử lý pixel đầu tiên ---
-    # Kết hợp Khóa, Ảnh gốc và Pixel mồi Q
     part1 = (int(K2[0]) + int(K3[0])) % 256
     part2 = (D_flat[0] + int(Q)) % 256
     C[0] = part1 ^ part2
@@ -21,7 +20,6 @@ def hybrid_diffusion_forward(D, K2, K3, Q):
     # --- Xử lý các pixel tiếp theo ---
     for i in range(1, N):
         part1 = (int(K2[i]) + int(K3[i])) % 256
-        # Cipher feedback: C[i] phụ thuộc vào C[i-1]
         part2 = (D_flat[i] + int(C[i-1])) % 256
         C[i] = part1 ^ part2
 
@@ -42,7 +40,6 @@ def hybrid_diffusion_backward(C, K2, K3, Q):
     # --- Giải mã các pixel từ cuối lên đầu (trừ pixel 0) ---
     for i in range(N - 1, 0, -1):
         part1 = (int(K2[i]) + int(K3[i])) % 256
-        # Đảo ngược phép XOR và phép cộng modulo
         temp = C_flat[i] ^ part1
         D_inv[i] = (temp - C_flat[i-1]) % 256
 

@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 # Anh_Y_Te_Hybrid/ui_hybrid_decrypt.py
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -5,7 +9,6 @@ from PIL import Image, ImageTk
 import numpy as np
 import cv2
 import time
-import os
 import math
 
 # --- IMPORT CÁC THÀNH PHẦN HYBRID TỪ CORE ---
@@ -53,12 +56,10 @@ class HybridDecryptUI:
             self.label_vars[var].grid(row=i, column=1, sticky="e", padx=15, pady=5)
         metrics_frame.columnconfigure(1, weight=1)
 
-        # ĐÃ SỬA: Gán nút bấm vào biến self.btn_decrypt
         self.btn_decrypt = tk.Button(left_panel, text="🔓 GIẢI MÃ HYBRID TỰ ĐỘNG", command=self.process_decrypt, 
                                      bg="#8e44ad", fg="white", font=("Arial", 10, "bold"), height=2, state="disabled")
         self.btn_decrypt.pack(fill="x", pady=5)
 
-        # ĐÃ SỬA: Gán nút bấm vào biến self.btn_save
         self.btn_save = tk.Button(left_panel, text="📥 LƯU ẢNH GIẢI MÃ", command=self.save_image, 
                                   bg="#d35400", fg="white", font=("Arial", 10, "bold"), state="disabled")
         self.btn_save.pack(fill="x", pady=5)

@@ -19,7 +19,6 @@ def hyper_lorenz_step_rk4(x, y, z, w, a, b, c, r, h):
     new_z = z + (h/6) * (k1z + 2*k2z + 2*k3z + k4z)
     new_w = w + (h/6) * (k1w + 2*k2w + 2*k3w + k4w)
     
-    # Chống nổ số (Safety Reset)
     if math.isinf(new_x) or math.isnan(new_x) or abs(new_x) > 1e10:
         return 0.1234, 0.5678, 0.9101, 0.1121
         
@@ -32,22 +31,17 @@ def generate_hybrid_keys(x0, y0, z0, w0, m, n, N0, h=0.001):
     a, b, c, r = 10, 8/3, 28, -1
     x, y, z, w = x0, y0, z0, w0
     
-    # Tổng số pixel cần thiết
     L = m * n
     
     K2 = np.zeros(L, dtype=np.uint8)
     K3 = np.zeros(L, dtype=np.uint8)
 
-    # Chạy bỏ N0 bước đầu để hệ đi vào trạng thái hỗn độn thực sự
     for _ in range(N0):
         x, y, z, w = hyper_lorenz_step_rk4(x, y, z, w, a, b, c, r, h)
 
-    # Sinh chuỗi khóa
     for i in range(L):
         x, y, z, w = hyper_lorenz_step_rk4(x, y, z, w, a, b, c, r, h)
         
-        # Công thức lấy khóa K2 từ biến y, K3 từ biến z
-        # Nhân 10^13 để lấy phần thập phân sâu, tăng tính nhạy cảm
         K2[i] = int(abs(y) * 10**13) % 256
         K3[i] = int(abs(z) * 10**13) % 256
 

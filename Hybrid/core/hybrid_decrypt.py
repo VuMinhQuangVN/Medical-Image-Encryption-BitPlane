@@ -1,7 +1,7 @@
 # core/hybrid_decrypt.py
-from core.hybrid_utils import bit_plane_rejoin, bit_plane_slice, compute_N0_Q_hybrid, get_sha512_hex, get_sha512_ints, inverse_arnold
-from core.key_generator import get_all_keys_hybrid
-from core.hybrid_diffusion import hybrid_diffusion_backward
+from Hybrid.core.hybrid_utils import bit_plane_rejoin, bit_plane_slice, compute_N0_Q_hybrid, get_sha512_hex, get_sha512_ints, inverse_arnold
+from Hybrid.core.key_generator import get_all_keys_hybrid
+from Hybrid.core.hybrid_diffusion import hybrid_diffusion_backward
 
 def run_hybrid_decrypt_logic(cipher_np, pwd):
     """Hàm logic Giải mã (Vừa tách từ UI ra)"""

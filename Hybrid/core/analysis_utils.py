@@ -29,7 +29,6 @@ def calculate_correlation(img):
     d_x, d_y = img[:-1, :-1].flatten(), img[1:, 1:].flatten()
     corr_d = np.corrcoef(d_x, d_y)[0, 1]
     
-    # Xử lý NaN (nếu ảnh trắng tinh/đen tinh)
     res = [c if not np.isnan(c) else 0.0 for c in [corr_h, corr_v, corr_d]]
     return tuple(res)
 

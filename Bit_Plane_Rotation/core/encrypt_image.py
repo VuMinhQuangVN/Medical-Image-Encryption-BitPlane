@@ -1,5 +1,5 @@
 import numpy as np
-from core.diffusion_phase import diffusion_phase
+from Bit_Plane_Rotation.core.diffusion_phase import diffusion_phase
 import cv2
 
 # =========================================================
@@ -29,8 +29,6 @@ def combine_bit_planes(bit_planes):
     img = np.zeros((m, n), dtype=np.uint8)
 
     for k in range(8):
-        # img += bit_planes[:, :, k] << k
-        # Dùng toán tử OR (|) thay vì cộng (+) để tránh lỗi vượt ngưỡng 255
         img = img | (bit_planes[:, :, k].astype(np.uint8) << k)
 
     return img
@@ -247,3 +245,12 @@ def encrypt_image(img, keys, Q):
     )
 
     return C
+
+def encrypt_image_with_intermediate(img, keys, Q):
+    """Hàm mã hóa trả về cả ảnh trung gian để làm Dashboard"""
+    D = bit_plane_rotation(img, keys)
+    
+
+    C = diffusion_phase(D, keys["K2"], keys["K3"], Q)
+    
+    return D, C  

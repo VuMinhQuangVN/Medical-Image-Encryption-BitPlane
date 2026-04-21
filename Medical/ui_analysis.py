@@ -98,18 +98,14 @@ class MedicalAutoAnalysisUI:
 
         try:
             # --- BƯỚC 1: MÃ HÓA ẢNH GỐC (Sử dụng mode is_analysis=True) ---
-            # Kết quả cho ra Cipher C1 và giá trị k2
             cipher_c1, k2 = encrypt_medical(self.img_orig, pwd, is_analysis=True)
 
             # --- BƯỚC 2: TẠO ẢNH SAI 1 PIXEL & MÃ HÓA (Để tính NPCR/UACI) ---
             img_mod = self.img_orig.copy()
-            # Thay đổi pixel tại tọa độ [0,0]
             img_mod[0, 0] = (int(img_mod[0, 0]) + 1) % 256
-            # Mã hóa bản copy này để lấy Cipher C2
             cipher_c2, _ = encrypt_medical(img_mod.astype(np.uint8), pwd, is_analysis=True)
 
             # --- BƯỚC 3: GIẢI MÃ (Để tính khả năng khôi phục) ---
-            # Truyền original_ref=self.img_orig để giải mã mode Analysis
             decrypted_img = decrypt_medical(cipher_c1, pwd, k2, original_ref=self.img_orig)
 
             # --- BƯỚC 4: TÍNH TOÁN CÁC CHỈ SỐ (GỌI TỪ UTILS) ---
@@ -126,10 +122,7 @@ class MedicalAutoAnalysisUI:
             d_ssim = calculate_ssim(self.img_orig, decrypted_img)
             d_ber = calculate_ber(self.img_orig, decrypted_img)
 
-            # --- BƯỚC 5: ĐẨY DỮ LIỆU VÀO BẢNG HIỂN THỊ ---
-            # Xử lý hiển thị PSNR vô cùng cho chuyên nghiệp
             d_psnr_txt = "∞" if math.isinf(d_psnr) else f"{d_psnr:.2f}"
-            # Xử lý BER (nếu bằng 0 thì hiện 0, ngược lại hiện số mũ)
             d_ber_txt = "0" if d_ber == 0 else f"{d_ber:.1e}"
 
             self.tree.insert("", 0, values=(
